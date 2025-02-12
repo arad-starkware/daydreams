@@ -11,21 +11,21 @@
  * - Real-time order status monitoring
  */
 
-import { Orchestrator } from "../packages/core/src/core/orchestrator";
-import { HandlerRole } from "../packages/core/src/core/types";
-import { HyperliquidClient } from "../packages/core/src/core/io/hyperliquid";
-import { ConversationManager } from "../packages/core/src/core/conversation-manager";
-import { ChromaVectorDB } from "../packages/core/src/core/vector-db";
-import { MessageProcessor } from "../packages/core/src/core/processors/message-processor";
-import { LLMClient } from "../packages/core/src/core/llm-client";
-import { env } from "../packages/core/src/core/env";
-import { LogLevel } from "../packages/core/src/core/types";
+import { Handler } from "../../packages/core/src/core/v0/orchestrator";
+import { HandlerRole } from "../../packages/core/src/core/v0/types";
+import { HyperliquidClient } from "../../packages/core/src/core/v0/io/hyperliquid";
+import { ConversationManager } from "../../packages/core/src/core/v0/conversation-manager";
+import { ChromaVectorDB } from "../../packages/core/src/core/v0/vector-db";
+import { MessageProcessor } from "../../packages/core/src/core/v0/processors/message-processor";
+import { LLMClient } from "../../packages/core/src/core/v0/llm-client";
+import { env } from "../../packages/core/src/core/v0/env";
+import { LogLevel } from "../../packages/core/src/core/v0/types";
 import chalk from "chalk";
-import { defaultCharacter } from "../packages/core/src/core/characters/character-trading-sage";
+import { defaultCharacter } from "../../packages/core/src/core/v0/characters/character-trading-sage";
 import { z } from "zod";
 import readline from "readline";
-import { MongoDb } from "../packages/core/src/core/db/mongo-db";
-import { makeFlowLifecycle } from "../packages/core/src/core/life-cycle";
+import { MongoDb } from "../../packages/core/src/core/v0/db/mongo-db";
+import { makeFlowLifecycle } from "../../packages/core/src/core/v0/life-cycle";
 
 async function main() {
   const loglevel = LogLevel.ERROR;

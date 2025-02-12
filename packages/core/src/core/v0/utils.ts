@@ -136,6 +136,7 @@ export const validateLLMResponseSchema = async <T>({
   logger,
 }: LLMValidationOptions<T>): Promise<T> => {
   const ajv = new Ajv();
+  console.log("HERE");
 
   const jsonSchema = zodToJsonSchema(schema, "mySchema");
   const validate = ajv.compile(jsonSchema as JSONSchemaType<T>);
@@ -161,6 +162,7 @@ export const validateLLMResponseSchema = async <T>({
 
   while (attempts < maxRetries) {
     try {
+      console.log("going to analyze");
       const response = await llmClient.analyze(
         formattedPrompt,
         {
@@ -168,7 +170,9 @@ export const validateLLMResponseSchema = async <T>({
         },
         filesAndImages
       );
+      console.log("finished analyzing");
 
+      console.log("response", response.toString());
       let responseText = response.toString().replace(/```json\n?|\n?```/g, "");
 
       let parsed: T;
