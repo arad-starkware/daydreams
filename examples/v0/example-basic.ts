@@ -7,19 +7,20 @@
  * - Maintain conversation memory using ChromaDB
  */
 
-import { LLMClient } from "../packages/core/src/core/llm-client";
-import { fetchGraphQL } from "../packages/core/src/core/providers";
-import { StarknetChain } from "../packages/core/src/core/chains/starknet";
+import { LLMClient } from "../../packages/core/src/core/v0/llm-client";
+import { fetchGraphQL } from "../../packages/core/src/core/v0/providers";
+import { StarknetChain } from "../../packages/core/src/core/v1/chains/starknet";
 
-import { ChainOfThought } from "../packages/core/src/core/chain-of-thought";
+import { ChainOfThought } from "../../packages/core/src/core/v0/chain-of-thought";
 import { ETERNUM_CONTEXT, PROVIDER_GUIDE } from "./eternum-context";
 import * as readline from "readline";
 import chalk from "chalk";
 
-import { ChromaVectorDB } from "../packages/core/src/core/vector-db";
+import { ChromaVectorDB } from "../../packages/core/src/core/v0/vector-db";
 import { z } from "zod";
-import { env } from "../packages/core/src/core/env";
-import { HandlerRole, LogLevel } from "../packages/core/src/core/types";
+import { env } from "../../packages/core/src/core/v0/env";
+import { HandlerRole, LogLevel } from "../../packages/core/src/core/v0/types";
+import { Logger } from "../../packages/core/src/core/v1/logger";
 
 /**
  * Helper function to get user input from CLI
@@ -47,11 +48,13 @@ async function main() {
   const memory = new ChromaVectorDB("agent_memory");
   await memory.purge(); // Clear previous session data
 
+  // console.log("Initializing Starknet chain...");
   const starknetChain = new StarknetChain({
     rpcUrl: env.STARKNET_RPC_URL,
     address: env.STARKNET_ADDRESS,
     privateKey: env.STARKNET_PRIVATE_KEY,
   });
+  // console.log("Starknet chain initialized");
 
   // Load initial context documents
   await memory.storeDocument({
@@ -61,6 +64,7 @@ async function main() {
     tags: ["game-mechanics", "rules"],
     lastUpdated: new Date(),
   });
+  // console.log("Game Rules stored");
 
   await memory.storeDocument({
     title: "Provider Guide",
@@ -69,6 +73,7 @@ async function main() {
     tags: ["actions", "provider-guide"],
     lastUpdated: new Date(),
   });
+  // console.log("Provider Guide stored");
 
   // Initialize the main reasoning engine
   const dreams = new ChainOfThought(

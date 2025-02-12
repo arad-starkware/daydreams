@@ -1,7 +1,12 @@
 import crypto from "crypto";
-import { ChromaClient, IncludeEnum, OpenAIEmbeddingFunction } from "chromadb";
+import {
+  ChromaClient,
+  IncludeEnum,
+  OpenAIEmbeddingFunction,
+  GoogleGenerativeAiEmbeddingFunction,
+} from "chromadb";
 import { env } from "./env";
-import { Logger } from "./logger";
+import { Logger } from "../v1/logger";
 import { Conversation } from "./conversation";
 import {
   LogLevel,
@@ -27,7 +32,9 @@ export class ChromaVectorDB implements VectorDB {
   static readonly DOCUMENTATION_COLLECTION = "documentation";
 
   private client: ChromaClient;
-  private embedder: OpenAIEmbeddingFunction;
+  private embedder:
+    | OpenAIEmbeddingFunction
+    | GoogleGenerativeAiEmbeddingFunction;
   private logger: Logger;
   private collectionName: string;
 
@@ -57,10 +64,14 @@ export class ChromaVectorDB implements VectorDB {
 
     // Initialize embedder with explicit error handling
     try {
-      this.embedder = new OpenAIEmbeddingFunction({
-        openai_api_key: env.OPENAI_API_KEY,
-        openai_model: "text-embedding-3-small", // Make sure we're using a valid model
+      this.embedder = new GoogleGenerativeAiEmbeddingFunction({
+        googleApiKey: env.GOOGLE_API_KEY,
+        model: "text-embedding-004", // Make sure we're using a valid model
       });
+      // this.embedder = new OpenAIEmbeddingFunction({
+      //   openai_api_key: env.OPENAI_API_KEY,
+      //   openai_model: "text-embedding-3-small", // Make sure we're using a valid model
+      // });
     } catch (error) {
       this.logger.error(
         "ChromaVectorDB.constructor",

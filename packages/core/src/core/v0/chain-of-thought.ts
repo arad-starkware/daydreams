@@ -8,7 +8,7 @@ import type {
   IOHandler,
   OutputIOHandler,
 } from "./types";
-import { Logger } from "./logger";
+import { Logger } from "../v1/logger";
 import { EventEmitter } from "events";
 import { GoalManager } from "./goal-manager";
 import { StepManager, type Step, type StepType } from "./step-manager";
@@ -1247,6 +1247,7 @@ ${availableOutputsSchema}
       let isComplete = false;
 
       // Get initial plan and actions
+      // console.log("Building prompt");
       const initialResponse = await validateLLMResponseSchema({
         prompt: this.buildPrompt({ query: userQuery }),
         schema: z.object({
@@ -1266,6 +1267,7 @@ ${availableOutputsSchema}
         llmClient: this.llmClient,
         logger: this.logger,
       });
+      // console.log("Initial response", initialResponse);
 
       // Initialize pending actions queue with initial actions
       let pendingActions: CoTAction[] = [
